@@ -74,7 +74,7 @@ app.post("/register", async (req, res) => {
         });
 
         await newUser.save();
-        res.status(201).send({ message: "User registered successfully" });
+        res.status(201).send({ message: "User registered successfully,Please Login Now" });
     } catch (error) {
         console.error("Error occurred:", error);
         res.status(500).send({ message: "Internal server error" });
