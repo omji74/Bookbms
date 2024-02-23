@@ -3,7 +3,7 @@ import "./login.css"
 import axios from "axios"
 import {useNavigate} from "react-router-dom"
 
-const Login  = () =>{
+const Login  = ({setLoginUser}) =>{
     const history = useNavigate()
     const [ user, setUser] = useState({
         email:"",
@@ -19,17 +19,15 @@ const Login  = () =>{
         
     }
     const login = ()=>{
-
-        const {email,password} = user
-        if(email && password)
-        {
-
         axios.post("http://localhost:5000/login",user)
-         .then(res=>alert(res.data.message))
-        }
-        else{
-            alert("Invalid id and password")
-        }
+         .then(res=>{
+         alert(res.data.message)
+         alert(`welcome ${res.data.existingUser.name}`)
+         setLoginUser(res.data.existingUser)
+         history("/")
+         })
+        
+      
     }
     return (
         <div className="login">
