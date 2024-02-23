@@ -34,8 +34,28 @@ const User = new mongoose.model("User",userSchema)
 
 //Routes 
 
-app.post("/login", (req, res) => {
-  res.send("MY API login");
+app.post("/login", async(req, res) => {
+    const {email,password } = req.body;
+    try{
+        const existingUser = await User.findOne({email:email});
+        if(existingUser){
+          if(password===existingUser.password){
+            res.send({message:"Login Successfully",existingUser:existingUser})
+          }
+          else{
+            res.send({message:"Incorrect Possword"})
+          }
+        }
+        else{
+          res.send({message:"user not registered"})
+
+        }
+    }
+    catch (error) {
+      console.error("Error occurred:", error);
+      res.status(500).send({ message: "Internal server error" });
+  }
+//   res.send("MY API login");
 });
 app.post("/register", async (req, res) => {
     const { name, email, password } = req.body;
@@ -60,30 +80,6 @@ app.post("/register", async (req, res) => {
         res.status(500).send({ message: "Internal server error" });
     }
 });
-
-
-// app.post("/register", (req, res)=> {
-//     const { name, email, password} = req.body
-//     User.findOne({email: email}, (err, user) => {
-//         if(user){
-//             res.send({message: "User already registerd"})
-//         } else {
-//             const user = new User({
-//                 name,
-//                 email,
-//                 password
-//             })
-//             user.save(err => {
-//                 if(err) {
-//                     res.send(err)
-//                 } else {
-//                     res.send( { message: "Successfully Registered, Please login now." })
-//                 }
-//             })
-//         }
-//     })
-    
-// }) 
 
 app.listen(5000, () => {
   console.log("Server started on port 5000");
